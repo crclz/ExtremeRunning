@@ -24,6 +24,10 @@ class GpsApi():
         outb = subprocess.check_output(f"{self.nox_adb_path} {command}")
         return outb.decode()
 
+    def set_position(self, pos):
+        self.set_longitude(pos[0])
+        self.set_latitude(pos[1])
+
     def set_longitude(self, longitude: float):
         """
         设置经度
