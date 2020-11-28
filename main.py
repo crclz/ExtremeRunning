@@ -7,17 +7,17 @@ gps = GpsApi('C:/yeshen/Nox/bin/nox_adb.exe')
 gps.start_service()
 
 run_path = [
-    (116.352109, 39.986355),
-    (116.352168, 39.985415),
-    (116.352963, 39.98545),
-    (116.352963, 39.98545)
+    (116.352051, 39.986359),
+    (116.35215, 39.985409),
+    (116.352976, 39.985457),
+    (116.352958, 39.9864)
 ]
 
-run_path = [gps_utils.gcj02_to_wgs84(*p) for p in run_path]
+run_path = [gps_utils.bd09_to_wgs84(*p) for p in run_path]
 run_path = list(run_path)
 
-plan_sec = 10
-interval = 0.2
+plan_sec = 20
+interval = 0.5
 
 pos = run_path[0]
 
