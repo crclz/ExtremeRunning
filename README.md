@@ -32,11 +32,4 @@ TODO
 
 
 ## 注意事项
-不使用的时候，请及时关闭悦跑圈和安卓模拟器。不然电脑可能<span class="hot">发烫</span>。
-
-<style>
-.hot {
-    color: red;
-    background-color: wheat;
-}
-</style>
+不使用的时候，请及时关闭悦跑圈和安卓模拟器。不然电脑可能<font color="red">发烫</font>。
