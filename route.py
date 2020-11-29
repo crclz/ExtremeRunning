@@ -44,4 +44,6 @@ def route_dist_list(route):
     lat1 = r1[:, 1]
     lon2 = r2[:, 0]
     lat2 = r2[:, 1]
-    return gps_utils.distance(lon1, lat1, lon2, lat2)
+    dist_list = gps_utils.distance(lon1, lat1, lon2, lat2)
+    dist_list = np.insert(dist_list, 0, 0)
+    return dist_list
