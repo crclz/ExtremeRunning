@@ -1,4 +1,4 @@
-import route
+import routing
 import numpy as np
 
 
@@ -7,19 +7,19 @@ class Runner():
     # 累计的距离
     dist_list = None
 
-    def __init__(self, route_points, velocity) -> None:
+    def __init__(self, route, velocity) -> None:
         """
         route_points -- numpy array of shape(n, 2), each row is [lon, lat]\n
         v -- velocity (m/s)
         """
 
-        assert route_points.shape[1] == 2
+        assert route.shape[1] == 2
         assert velocity > 0
 
-        self.route = route_points
+        self.route = route
         self.velocity = velocity
 
-        dist_list = route.route_dist_list(self.route)
+        dist_list = routing.route_dist_list(self.route)
         assert dist_list[0] == 0
 
         self.dist_list = np.cumsum(dist_list)
@@ -57,9 +57,9 @@ if __name__ == "__main__":
 
     run_path = np.array(run_path)
 
-    rt = route.get_route(run_path, 10000)
+    rt = routing.generate_route(run_path)
 
-    runner = Runner(run_path, 1000/(5*60))
+    runner = Runner(run_path, 1000/(3*60))  # 3min/km
 
     p = runner.calc_position_by_distance(400)
 

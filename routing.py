@@ -1,3 +1,6 @@
+import math
+
+import numpy
 import gps_utils
 import numpy as np
 from scipy.interpolate import interp1d
@@ -23,14 +26,14 @@ run_path = [
 ]
 
 
-def get_route(run_path, chunks):
-    points = np.array(run_path)
+def get_smooth_route(route, segments):
+    points = np.array(route)
 
     distance = np.cumsum(np.sqrt(np.sum(np.diff(points, axis=0)**2, axis=1)))
     distance = np.insert(distance, 0, 0)/distance[-1]
 
     # Interpolation for different methods:
-    alpha = np.linspace(0, 1, chunks)
+    alpha = np.linspace(0, 1, segments)
 
     interpolator = interp1d(distance, points, kind='cubic', axis=0)
     route = interpolator(alpha)
@@ -47,3 +50,44 @@ def route_dist_list(route):
     dist_list = gps_utils.distance(lon1, lat1, lon2, lat2)
     dist_list = np.insert(dist_list, 0, 0)
     return dist_list
+
+
+def repeat_route(route, tot_dist):
+    """
+    route -- numpy array of shape (n, 2)\n
+    tot_dist -- repeat route to tot_dist (meters)\n
+    """
+
+    assert route.shape[1] == 2
+
+    dist_list = route_dist_list(route)
+    dist = dist_list.sum()
+
+    repeat_times = math.ceil(tot_dist/dist)
+
+    repeated = []
+    for i in range(repeat_times):
+        repeated.append(route)
+
+    repeated = np.concatenate(repeated)
+
+    assert repeated.shape[1] == 2
+
+    return repeated
+
+
+def generate_route(route):
+    """
+    route -- numpy array of shape (n, 2)\n
+    """
+    assert route.shape[1] == 2
+
+    tot_dist = 100*1000  # 100km
+    segments = tot_dist * 2  # 2 segments per meter
+
+    route = repeat_route(route, tot_dist)
+
+    # smoothing the route
+    route = get_smooth_route(route, segments)
+
+    return route
