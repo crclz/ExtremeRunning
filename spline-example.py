@@ -21,9 +21,6 @@ run_path = [
 run_path = [gps_utils.bd09_to_wgs84(*p) for p in run_path]
 run_path = list(run_path)
 
-run_path_x = list(p[0] for p in run_path)
-run_path_y = list(p[1] for p in run_path)
-
 points = np.array(run_path)
 
 distance = np.cumsum(np.sqrt(np.sum(np.diff(points, axis=0)**2, axis=1)))
