@@ -1,9 +1,7 @@
 # ExtremeRunning
 
 ## 视频教程
-TODO
-链接
-时长：
+[BV1nZ4y1G748](https://www.bilibili.com/video/BV1nZ4y1G748/)
 
 ## 前提条件
 
