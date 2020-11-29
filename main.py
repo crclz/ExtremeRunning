@@ -1,43 +1,65 @@
+from routing import generate_route
+from runner import Runner
 import time
+
+import numpy
 from gpsapi import GpsApi
 import gps_utils
+import numpy as np
 
-gps = GpsApi('C:/yeshen/Nox/bin/nox_adb.exe')
-
-gps.start_service()
-
-run_path = [
-    (116.352051, 39.986359),
-    (116.35215, 39.985409),
-    (116.352976, 39.985457),
-    (116.352958, 39.9864)
+route = [
+    [116.35091, 39.986832],
+    [116.351836, 39.986842],
+    [116.353156, 39.986891],
+    [116.354225, 39.986946],
+    [116.354513, 39.986946],
+    [116.354638, 39.986932],
+    [116.354629, 39.986808],
+    [116.354638, 39.986725],
+    [116.354656, 39.986358],
+    [116.354629, 39.986096],
+    [116.354674, 39.985453],
+    [116.35471, 39.985253],
+    [116.354719, 39.985073],
+    [116.354845, 39.985032],
+    [116.35515, 39.985052],
+    [116.356067, 39.985045],
+    [116.356713, 39.985059],
+    [116.356848, 39.985094],
+    [116.356848, 39.985253],
+    [116.356839, 39.98537],
+    [116.356821, 39.985564],
+    [116.356803, 39.98594],
+    [116.356794, 39.986428],
+    [116.356767, 39.986777],
+    [116.35674, 39.987008],
+    [116.356839, 39.98706],
+    [116.357032, 39.98706],
+    [116.358312, 39.987098],
+    [116.359557, 39.98716],
 ]
 
-run_path = [gps_utils.bd09_to_wgs84(*p) for p in run_path]
-run_path = list(run_path)
+route = [gps_utils.bd09_to_wgs84(*p) for p in route]
+route = list(route)
 
-plan_sec = 20
-interval = 0.5
+route = numpy.array(route)
 
-pos = run_path[0]
 
-i = 0
+gps = GpsApi('C:/yeshen/Nox/bin/nox_adb.exe')
+gps.start_service()
+
+route = generate_route(route)
+
+runner = Runner(route, 1000/(2*60))  # 2min/km
+
+time_start = time.time()
+
 while True:
-    p1 = run_path[i % len(run_path)]
-    p2 = run_path[(i+1) % len(run_path)]
+    t = time.time()-time_start
+    pos = runner.calc_position_by_time(t)
+    print(pos)
 
-    steps = int(plan_sec/interval)
+    gps.set_position(pos)
 
-    dx = p2[0]-p1[0]
-    dx /= steps
-    dy = p2[1]-p1[1]
-    dy /= steps
-
-    for t in range(steps):
-        x = pos[0]+dx
-        y = pos[1]+dy
-        pos = (x, y)
-        gps.set_position(pos)
-        time.sleep(interval)
-
-    i += 1
+    # time.sleep(1.0)
+    time.sleep(0.3)

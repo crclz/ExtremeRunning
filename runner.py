@@ -9,7 +9,9 @@ class Runner():
 
     def __init__(self, route, velocity) -> None:
         """
-        route_points -- numpy array of shape(n, 2), each row is [lon, lat]\n
+        route_points -- numpy array of shape(n, 2), each row is [lon, lat].
+        Smooting should be done before.\an
+
         v -- velocity (m/s)
         """
 
@@ -25,8 +27,8 @@ class Runner():
         self.dist_list = np.cumsum(dist_list)
 
     def calc_position_by_distance(self, dist):
-        assert dist > self.dist_list[0]
-        assert dist < self.dist_list[-1]
+        assert dist >= self.dist_list[0]
+        assert dist <= self.dist_list[-1]
         ix = np.searchsorted(self.dist_list, dist)
         return self.route[ix]
 
