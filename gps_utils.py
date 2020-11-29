@@ -1,3 +1,4 @@
+import numpy as np
 import math
 
 x_pi = 3.14159265358979324 * 3000.0 / 180.0
@@ -126,9 +127,10 @@ def out_of_china(lng, lat):
     return not (lng > 73.66 and lng < 135.05 and lat > 3.86 and lat < 53.55)
 
 
-def distance(p1, p2):
-    lon1, lat1 = p1
-    lon2, lat2 = p2
+def distance(lon1, lat1, lon2, lat2):
+    """
+    This could be vectorized
+    """
 
     R = 6371e3
     φ1 = lat1 * math.pi/180
@@ -136,9 +138,9 @@ def distance(p1, p2):
     Δφ = (lat2-lat1) * math.pi/180
     Δλ = (lon2-lon1) * math.pi/180
 
-    a = math.sin(Δφ/2) * math.sin(Δφ/2) + math.cos(φ1) * \
-        math.cos(φ2) * math.sin(Δλ/2) * math.sin(Δλ/2)
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+    a = np.sin(Δφ/2) * np.sin(Δφ/2) + np.cos(φ1) * \
+        np.cos(φ2) * np.sin(Δλ/2) * np.sin(Δλ/2)
+    c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1-a))
 
     d = R * c
 
